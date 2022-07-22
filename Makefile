@@ -8,12 +8,12 @@ RPI_VERSION ?= 3
 
 INCLUDES := -I ./include
 
-CC := aarch64-linux-gnu-gcc
+CC := aarch64-none-elf-gcc
 CASM := aarch64-none-elf-as
 
-CFLAG := -c -g2 -O0 -std=c99 -DRPI_VERSION=$(RPI_VERSION)\
+CFLAG := -c -g -O0 -DRPI_VERSION=$(RPI_VERSION)\
 			-nostdlib -nostartfiles \
-			-fno-builtin -fno-exceptions -ffreestanding -mgeneral-regs-only
+			-ffreestanding -mgeneral-regs-only
 
 OUTPUT_DIR = ./obj
 BIN_DIR = ./bin
@@ -35,14 +35,15 @@ DEF_FILES += $(ASM_OBJ:%.o=%.d)
 build: $(ASM_OBJ) $(C_OBJ)
 
 copy:
-	aarch64-linux-gnu-ld -nostdlib -T linker.ld $(ASM_OBJ) $(C_OBJ) -o $(ELF_FILE)
-	aarch64-linux-gnu-objcopy $(ELF_FILE) -O binary  $(BIN_FILE)
+	aarch64-none-elf-ld -nostdlib  -T linker.ld $(ASM_OBJ) $(C_OBJ) -o $(ELF_FILE)
+	aarch64-none-elf-objcopy $(ELF_FILE) --strip-all -O binary  $(BIN_FILE)
 
 qemu:
-	qemu-system-aarch64 \
-		-M raspi3	\
-		-m 1024M	\
-		-kernel kernel8.img		\
+	qemu-system-aarch64\
+		-M raspi3b \
+		-m 1024 \
+		-device loader,file=./kernel8.elf,addr=0x80000,cpu-num=0\
+		-S -s \
 		-serial stdio 
 
 all: build copy

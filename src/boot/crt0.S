@@ -1,5 +1,3 @@
-.equ FS_BASE, 0xffff000030000000
-.equ FS_SIZE, 101*16*63*512
 
 .section .text.boot
 
@@ -13,8 +11,16 @@ _start:
     //single core: only hart 0 jump to kernel
     mrs x0, mpidr_el1
     and x0, x0, #0b11
-    cbnz x0, _pause_hart
 
+    cbz x0, _core_0
+
+    //cbz x0, 1f
+other_cores:
+    wfe
+    b other_cores
+
+
+_core_0:
     mrs x0, CurrentEL
     and x0, x0, #0b1100
     cmp x0, #0b1000
@@ -22,13 +28,8 @@ _start:
     blt _switch_to_current
     beq _switch_el2_to_el1
     bgt _switch_el3_to_el2
-
-    b _pause_hart
-
-_pause_hart:
-    wfe
-    b _pause_hart
-
+ 
+ // Core 0 
 _switch_el3_to_el2:
     mov x0, #0b10110110001
     msr scr_el3, x0
@@ -70,11 +71,6 @@ _switch_to_current:
     bl set_up_el0_pt
     bl enable_mmu
 
-    ldr x0, =FS_BASE
-    ldr x1, =__sbss
-    ldr x2, =FS_SIZE
-    bl memcpy
-
     ldr x0, =__sbss
     ldr x1, =__ebss
     sub x2, x1, x0
@@ -86,9 +82,29 @@ _switch_to_current:
 
     mov x0, #0xffff000000000000
     add sp, sp, x0
-
     ldr x0, =main
     br x0
+
+// Core 2
+_pause_hart:
+    wfe
+
+
+.org 0xe0
+.globl spin_cpu1
+spin_cpu1:
+        .quad 0
+
+.org 0xe8
+.globl spin_cpu2
+spin_cpu2:
+        .quad 0
+
+.org 0xf0
+.globl spin_cpu3
+spin_cpu3:
+        .quad 0
+
 /** 
 .global switch_el0
 switch_el0:

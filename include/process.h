@@ -10,11 +10,11 @@ typedef struct ProcessContext
     struct TrapFrame* tf;
 }ProcessContext_t;
 
-typedef struct ProcessControl
-{
-    ProcessContext_t* current_process;
-    HeadList_t ready_list;
-}ProcessControl_t;
+// typedef struct ProcessControl
+// {
+//     ProcessContext_t* current_process;
+//     HeadList_t ready_list;
+// }ProcessControl_t;
 
 #define PROCESS_STACK_SIZE_IN_BYTES     (2 * 1024 * 1024) // 2MB = 1 Page
 #define NUM_PROCESS                     4
@@ -24,3 +24,5 @@ typedef struct ProcessControl
 #define PROC_READY                      3
 
 void init_process(void);
+
+void set_core_1(void);
