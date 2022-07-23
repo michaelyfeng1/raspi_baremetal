@@ -40,7 +40,7 @@ copy:
 
 qemu:
 	qemu-system-aarch64 \
-		-M raspi3	\
+		-M raspi3b	\
 		-m 1024M	\
 		-kernel kernel8.img		\
 		-serial stdio 
