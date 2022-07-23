@@ -25,25 +25,15 @@ int main(void)
     intr_contoller_init();
     
     // timer_init();
-    // syscall_init();
     frame_buffer_init();
     // enable global interrupt
     // enable_irq();
     
-    // draw_string(200, 200, "Hello World\n", 0x05);
-    // init_fs();
-    // void* buf = kalloc();
-    // switch_el0();
-    // load_file("TEST.BIN", (u64)(buf)); 
+    draw_string(200, 200, "Hello World\n", 0x05);
     
-    // printk("File data: %s\r\n", buf);
+    draw_rectangle();
     
-    // draw_rectangle();
-    
-    // init_process();
-
     launch_cores();
-
 
     while(true);
 }
