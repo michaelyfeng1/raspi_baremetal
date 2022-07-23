@@ -45,7 +45,7 @@ typedef struct DirEntry {
 
 #define FS_BASE         P2V(0x30000000)
 #else
-#define FS_BASE         0xffff000030000000
+#define FS_BASE         0x000030000000
 #endif
 
 #define ENTRY_EMPTY     0

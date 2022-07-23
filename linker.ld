@@ -12,8 +12,17 @@ ENTRY(_start)
 
 SECTIONS
 {
+    . = 0xe0;
+    _cpu1_mailbox_notify = .;
+
+    . = 0xe8;
+    _cpu2_mailbox_notify = .;
+
+    . = 0xf0;
+    _cpu3_mailbox_notify = .;
+
     /* . = ORIGIN(RAM); */
-    . = 0xffff000000080000;
+    . = 0x000000080000;
     __kernel_start = .;
     /* PROVIDE (_kernel_start = .); */
 

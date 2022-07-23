@@ -39,22 +39,12 @@ copy:
 	aarch64-none-elf-objcopy $(ELF_FILE) --strip-all -O binary  $(BIN_FILE)
 
 qemu:
-	qemu-system-aarch64\
-		-M raspi3b \
-		-m 1024 \
-		-smp 4 \
-		-device loader,file=./kernel8.img,addr=0x80000,cpu-num=0\
-		-device loader,file=./kernel8.img,addr=0x80000,cpu-num=1\
-		-S -s \
+	qemu-system-aarch64 \
+		-M raspi3b	\
+		-m 1024M	\
+		-kernel kernel8.img		\
 		-serial stdio 
-
-qemu:
-	qemu-system-aarch64\
-		-M raspi3b \
-		-m 1024 \
-		-device loader,file=./kernel8.elf,addr=0x80000,cpu-num=0\
-		-S -s \
-		-serial stdio 
+		
 
 all: build copy
 

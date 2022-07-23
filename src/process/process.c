@@ -64,7 +64,9 @@ static ProcessContext_t* alloc_new_process(void)
 
     process->tf = (struct TrapFrame*)(process->stack_start + PAGE_SIZE - sizeof(struct TrapFrame));
     
-    
+    process->tf->elr = (u64)process_test;
+    process->tf->spsr = 0b1111000101;
+
     // process->tf->elr = 0x400000;
     // process->tf->sp0 = 0x400000 + PAGE_SIZE;
     // process->tf->spsr = 0;
@@ -73,19 +75,14 @@ static ProcessContext_t* alloc_new_process(void)
     // memset((u8*)process->page_table, 0, PAGE_SIZE);
     // page_table_clone(process->page_table, (u64)kalloc());
     // memset((void*)process->page_table, 0, PAGE_SIZE);
-    
 
+    // u64* new_process_page_table = kalloc();
+    // process->page_table = read_pgd_ttbr1();
+    // ASSERT(process->page_table != 0);
 
-    process->tf->elr = (u64)process_test;
-    process->tf->spsr = 0b1111000101;
+    // page_table_clone(process->page_table, (u64)new_process_page_table);
 
-    u64* new_process_page_table = kalloc();
-    process->page_table = read_pgd_ttbr1();
-    ASSERT(process->page_table != 0);
-
-    page_table_clone(process->page_table, (u64)new_process_page_table);
-
-    process->page_table = new_process_page_table;
+    // process->page_table = new_process_page_table;
 
     return process;
 }
@@ -120,6 +117,16 @@ void init_process(void)
 
 //test function
 
+void store32(unsigned long address, unsigned long value)
+{
+    *(unsigned long *) address = value;
+}
+
+unsigned long load32(unsigned long address)
+{
+    return *(unsigned long *) address;
+}
+
 void print_f(int x)
 {
     printk("Kernel Hello Word %d\n", x);
@@ -136,5 +143,21 @@ void process_test()
     printk("Kernel Hello Word\n");
     printk("%d\ %d %d\n", x, y , z);
     print_f(y);
-    while(1);
+}
+
+void launch_cores()
+{
+extern u64 _cpu1_mailbox_notify;
+extern u64 _cpu2_mailbox_notify;
+extern u64 _cpu3_mailbox_notify;
+extern void _start();
+
+    *((u64*)&_cpu1_mailbox_notify) = (u64)_start;
+    __asm__ volatile ("sev");
+
+    *((u64*)&_cpu2_mailbox_notify) = (u64)_start;
+    __asm__ volatile ("sev");
+    
+    *((u64*)&_cpu3_mailbox_notify) = (u64)_start;
+    __asm__ volatile ("sev");
 }

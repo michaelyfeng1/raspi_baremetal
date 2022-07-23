@@ -1,37 +1,60 @@
 
 .section .text.boot
 
-//.section ".text"
-
-// #include "config.h"
-//#include "file.h"
-
 .global _start
 _start:
-    //single core: only hart 0 jump to kernel
     mrs x0, mpidr_el1
     and x0, x0, #0b11
+    cmp x0, #0
+    beq _core_0
+    cmp x0, #1
+    beq _core_1
+    cmp x0, #2
+    beq _core_2
+    cmp x0, #3
+    beq _core_3
 
-    cbz x0, _core_0
-
-    //cbz x0, 1f
-other_cores:
+_invalid:
     wfe
-    b other_cores
+    b _invalid
 
+_core_1:
+    wfe
+    ldr x0, =kstack_core_1
+    add x0, x0, #(16 * 1024)
+    mov sp, x0
+    b _core_1_start
+_core_1_start:
+    b main_core_1
+
+_core_2:
+    wfe
+    ldr x0, =kstack_core_2
+    add x0, x0, #(16 * 1024)
+    mov sp, x0
+    b _core_2_start
+_core_2_start:
+    b main_core_2
+
+_core_3:
+    wfe
+    ldr x0, =kstack_core_3
+    add x0, x0, #(16 * 1024)
+    mov sp, x0
+    b _core_3_start
+_core_3_start:
+    b main_core_3
 
 _core_0:
     mrs x0, CurrentEL
-    and x0, x0, #0b1100
+    and x0, x0, #0b1100 // C is el3;  8 is el2;  4 is el1
     cmp x0, #0b1000
 
-    blt _switch_to_current
+    blt el1_entry
     beq _switch_el2_to_el1
     bgt _switch_el3_to_el2
- 
- // Core 0 
 _switch_el3_to_el2:
-    mov x0, #0b10110110001
+   mov x0, #0b10110110001
     msr scr_el3, x0
 
     mov x0, #0b01111001100
@@ -43,13 +66,7 @@ _switch_el3_to_el2:
     eret
 
 _switch_el2_to_el1:
-//    mov x0, #(1 << 31)
-//    orr x0, x0, #(1 << 1)
-//    msr hcr_el2, x0
 
-//    mov     x3, #0x0800
-//    movk    x3, #0x30d0, lsl #16
-//    msr     sctlr_el1, x3
     msr sctlr_el1, xzr
     mov x0, #(1 << 31)
     msr hcr_el2, x0
@@ -57,19 +74,20 @@ _switch_el2_to_el1:
     mov x0, #0b1111000101 //mode file is 0101 (el1)
     msr spsr_el2, x0
 
-    adr x0, _switch_to_current
+    adr x0, el1_entry
     msr elr_el2, x0
 
     eret
 
-_switch_to_current:
-    //ldr x0, =_start
-    //mov sp, x0
-    mov sp, #0x80000
+el1_entry:
+    // set up kernel stack
+    ldr x0, =kstack_core_0
+    add x0, x0, #(16 * 1024)
+    mov sp, x0
 
-    bl set_up_el1_pt
-    bl set_up_el0_pt
-    bl enable_mmu
+    //bl set_up_el1_pt
+    //bl set_up_el0_pt
+    //bl enable_mmu
 
     ldr x0, =__sbss
     ldr x1, =__ebss
@@ -80,30 +98,41 @@ _switch_to_current:
     ldr x0, =irq_vec_table
     msr vbar_el1, x0
 
-    mov x0, #0xffff000000000000
-    add sp, sp, x0
-    ldr x0, =main
-    br x0
+    //mov x0, #0xffff000000000000
+    //add sp, sp, x0
+    //ldr x0, =main
+    //br x0
 
-// Core 2
-_pause_hart:
-    wfe
+    bl main
 
+start_cpu1:
+    b start_cpu1
 
-.org 0xe0
-.globl spin_cpu1
-spin_cpu1:
-        .quad 0
+//.globl __start1
+//__start1:
+//    ldr x0,=spin_cpu1
+//    mov x1, #0x40000000
+//    str w0, [x1, #0x90]
+//    sev
+//    b __start1
+    
 
-.org 0xe8
-.globl spin_cpu2
-spin_cpu2:
-        .quad 0
+.global kstack_core_0
+kstack_core_0:
+    .space 16 * 1024, 0
 
-.org 0xf0
-.globl spin_cpu3
-spin_cpu3:
-        .quad 0
+.global kstack_core_1
+kstack_core_1:
+    .space 16 * 1024, 0
+
+.global kstack_core_2
+kstack_core_2:
+    .space 16 * 1024, 0
+
+.global kstack_core_3
+kstack_core_3:
+    .space 16 * 1024, 0
+
 
 /** 
 .global switch_el0

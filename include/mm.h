@@ -1,6 +1,7 @@
 #pragma once
 
-#define KERNEL_BASE         0xffff000000000000
+// #define KERNEL_BASE         0xffff000000000000
+#define KERNEL_BASE         0x000000000000
 
 #define P2V(p) ((u64)(p) + KERNEL_BASE)
 #define V2P(p) ((u64)(p) - KERNEL_BASE)

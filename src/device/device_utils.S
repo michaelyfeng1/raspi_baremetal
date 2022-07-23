@@ -26,8 +26,8 @@ set_timer_interval:
     msr CNTP_TVAL_EL0, x0
     ret
 
-.equ INTR_CNTL_REG_CORE_0_ADDR,   0xffff000040000040
-.equ INTR_STATUS_REG_CORE_0_ADDR, 0xffff000040000060 //interrupt source register
+.equ INTR_CNTL_REG_CORE_0_ADDR,   0x000040000040
+.equ INTR_STATUS_REG_CORE_0_ADDR, 0x000040000060 //interrupt source register
 
 .global enable_timer_irq
 enable_timer_irq:

@@ -24,11 +24,11 @@ int main(void)
     
     intr_contoller_init();
     
-    timer_init();
-    syscall_init();
-    // frame_buffer_init();
+    // timer_init();
+    // syscall_init();
+    frame_buffer_init();
     // enable global interrupt
-    enable_irq();
+    // enable_irq();
     
     // draw_string(200, 200, "Hello World\n", 0x05);
     // init_fs();
@@ -40,8 +40,9 @@ int main(void)
     
     // draw_rectangle();
     
-    set_core_1();
-    init_process();
+    // init_process();
+
+    launch_cores();
 
 
     while(true);

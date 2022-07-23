@@ -24,5 +24,6 @@ typedef struct ProcessContext
 #define PROC_READY                      3
 
 void init_process(void);
+void launch_cores(void);
 
 void set_core_1(void);
