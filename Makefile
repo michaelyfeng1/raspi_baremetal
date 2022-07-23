@@ -42,6 +42,7 @@ qemu:
 	qemu-system-aarch64 \
 		-M raspi3b	\
 		-m 1024M	\
+		-smp 4 \
 		-kernel kernel8.img		\
 		-serial stdio 
 		
