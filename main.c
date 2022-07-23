@@ -28,12 +28,8 @@ int main(void)
     frame_buffer_init();
     // enable global interrupt
     // enable_irq();
-    
-    draw_string(200, 200, "Hello World\n", 0x05);
-    
-    draw_rectangle();
-    
     launch_cores();
 
-    while(true);
+extern void main_core_0(void);
+    main_core_0();
 }
