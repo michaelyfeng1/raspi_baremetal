@@ -22,7 +22,7 @@ int main(void)
 
     heap_mem_seg_init();
     
-    intr_contoller_init();
+    // intr_contoller_init();
     
     // timer_init();
     frame_buffer_init();

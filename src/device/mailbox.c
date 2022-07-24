@@ -120,14 +120,14 @@ void mail_box_frame_buffer_init()
     mailbox_buffer[2] = FB_SET_PHYSICAL_DIMENSIONS;  //set phy wh
     mailbox_buffer[3] = 8;
     mailbox_buffer[4] = 8;
-    mailbox_buffer[5] = 1920;         //FrameBufferInfo.width
-    mailbox_buffer[6] = 1080;          //FrameBufferInfo.height
+    mailbox_buffer[5] = 640;         //FrameBufferInfo.width
+    mailbox_buffer[6] = 480;          //FrameBufferInfo.height
 
     mailbox_buffer[7] = FB_SET_VIRTUAL_DIMENSIONS;  //set virt wh
     mailbox_buffer[8] = 8;
     mailbox_buffer[9] = 8;
-    mailbox_buffer[10] = 1920;        //FrameBufferInfo.virtual_width
-    mailbox_buffer[11] = 1080;         //FrameBufferInfo.virtual_height
+    mailbox_buffer[10] = 640;        //FrameBufferInfo.virtual_width
+    mailbox_buffer[11] = 480;         //FrameBufferInfo.virtual_height
 
     mailbox_buffer[12] = FB_SET_VIRTUAL_OFFSET; //set virt offset
     mailbox_buffer[13] = 8;

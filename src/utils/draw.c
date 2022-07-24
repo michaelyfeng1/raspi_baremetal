@@ -29,23 +29,24 @@ void draw_char(u8 ch, int x, int y, u8 attr)
     }
 }
 
-void draw_rectangle()
+void draw_rectangle(int x, int y, unsigned char attr)
 {
-	int y = 100;
-    while (y <= 400) 
+	int _y = y;
+    while (_y <= y + 45) 
     {
-       int x=100;
-        while (x <= 400) 
+       int _x = x;
+        while (_x <= x + 400) 
         {
-            if ((x == 100 || x == 400) || (y == 100 || y == 400)) 
+            if ((x == _x || _x == x + 400) || (y == _y || _y == y + 45)) 
             {
-                int offs = (y * get_paltte()->pitch) + (x * (get_paltte()->bpp >> 3 ));
-                ((unsigned int*)get_fb_ptr())[offs / 4] = vgapal[0x0c];
+                int offs = (_y * get_paltte()->pitch) + (_x * (get_paltte()->bpp >> 3 ));
+                ((unsigned int*)get_fb_ptr())[offs / 4] = vgapal[attr];
             }
             
-            x++;
+            _x++;
        }
-       y++;
+
+       _y++;
     }
 }
 

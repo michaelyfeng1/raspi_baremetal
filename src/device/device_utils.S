@@ -47,6 +47,7 @@ read_intr_status:
 
 .global enable_irq
 enable_irq:
+    //Indrectly map to spsr register daif bits
     msr daifclr, #2
     ret
 
