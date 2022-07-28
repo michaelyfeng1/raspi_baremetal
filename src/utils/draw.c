@@ -40,7 +40,7 @@ void draw_rectangle(int x, int y, unsigned char attr)
             if ((x == _x || _x == x + 400) || (y == _y || _y == y + 45)) 
             {
                 int offs = (_y * get_paltte()->pitch) + (_x * (get_paltte()->bpp >> 3 ));
-                ((unsigned int*)get_fb_ptr())[offs / 4] = vgapal[attr];
+                ((unsigned int*)get_fb_ptr())[offs >> 2] = vgapal[attr];
             }
             
             _x++;
