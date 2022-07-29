@@ -2,7 +2,11 @@
 #include "draw.h"
 #include "mailbox.h"
 #include "lock.h"
+#include "command.h"
 #include "print.h"
+
+static Command_t command_ring[COMMAND_NUM_MAX];
+
 
 void main_core_0(void)
 {
