@@ -22,12 +22,13 @@ int main(void)
 
     heap_mem_seg_init();
     
-    // intr_contoller_init();
+    intr_contoller_init();
     
     // timer_init();
     frame_buffer_init();
     // enable global interrupt
-    // enable_irq();
+    enable_irq();
+    
     launch_cores();
 
 extern void main_core_0(void);
