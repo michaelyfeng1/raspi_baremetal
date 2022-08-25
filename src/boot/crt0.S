@@ -85,10 +85,6 @@ el1_entry:
     add x0, x0, #(16 * 1024)
     mov sp, x0
 
-    //bl set_up_el1_pt
-    //bl set_up_el0_pt
-    //bl enable_mmu
-
     ldr x0, =__sbss
     ldr x1, =__ebss
     sub x2, x1, x0
@@ -98,23 +94,10 @@ el1_entry:
     ldr x0, =irq_vec_table
     msr vbar_el1, x0
 
-    //mov x0, #0xffff000000000000
-    //add sp, sp, x0
-    //ldr x0, =main
-    //br x0
-
     bl main
 
 start_cpu1:
     b start_cpu1
-
-//.globl __start1
-//__start1:
-//    ldr x0,=spin_cpu1
-//    mov x1, #0x40000000
-//    str w0, [x1, #0x90]
-//    sev
-//    b __start1
     
 
 .global kstack_core_0

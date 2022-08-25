@@ -51,3 +51,20 @@ void main_core_3(void)
 
     while(1);
 }
+
+/**
+ * @brief Core
+ * Qemu loads kernel as linux kernel module and follow linux loading mechanism
+ * Core 0 is the bootstrap core
+ * All other cores will be put in slient-mode/power-saving mode
+ * 
+ * Mailbox reigstes assoicted to each core are used to wake up core
+ * By writng callback address to mailbox register will wake up associated core
+ *
+ *
+ * 
+ * 0xd8 core 0
+ * 0xe0 core 1
+ * 0xe8 core 2
+ * 0xf0 core 3
+ */
