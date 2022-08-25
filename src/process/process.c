@@ -67,23 +67,6 @@ static ProcessContext_t* alloc_new_process(void)
     process->tf->elr = (u64)process_test;
     process->tf->spsr = 0b1111000101;
 
-    // process->tf->elr = 0x400000;
-    // process->tf->sp0 = 0x400000 + PAGE_SIZE;
-    // process->tf->spsr = 0;
-
-    // process->page_table = (uint64_t)kalloc();
-    // memset((u8*)process->page_table, 0, PAGE_SIZE);
-    // page_table_clone(process->page_table, (u64)kalloc());
-    // memset((void*)process->page_table, 0, PAGE_SIZE);
-
-    // u64* new_process_page_table = kalloc();
-    // process->page_table = read_pgd_ttbr1();
-    // ASSERT(process->page_table != 0);
-
-    // page_table_clone(process->page_table, (u64)new_process_page_table);
-
-    // process->page_table = new_process_page_table;
-
     return process;
 }
 
