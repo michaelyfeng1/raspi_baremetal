@@ -88,6 +88,7 @@ static uint32_t get_root_directory_count(void)
  * 0x1a     2       starting cluster
  * 0x1c     4       file size
  */
+
 static DirEntry_t* get_root_directory(void)
 {
     BPB_t* bpb = get_bpb();
